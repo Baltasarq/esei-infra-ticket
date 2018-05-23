@@ -13,7 +13,7 @@ class User(ndb.Model):
     Level = Enum([
         "Admin",    # Can do anything
         "Staff",    # Can create tickets, make comments and close them.
-        "Client"    # Can just read.
+        "Client"    # Can just read and make comments.
     ], start=400, default=2)
 
     added = ndb.DateProperty(auto_now_add=True, indexed=True)
@@ -28,6 +28,9 @@ class User(ndb.Model):
         return self.level == User.Level.Client
 
     def __str__(self):
+        return User.Level.values[self.level] + " (" + self.email + ")"
+
+    def __unicode__(self):
         return User.Level.values[self.level] + ": " + self.nick + " (" + self.email + ")"
 
 
@@ -42,7 +45,6 @@ def create(usr, level):
     toret.email = usr.email()
     toret.nick = usr.nickname()
     toret.level = level
-    toret.usr = usr
 
     return toret
 
@@ -72,13 +74,18 @@ def retrieve(usr):
 
     if usr:
         usr_email = usr.email()
-        users = User.query(User.email == usr_email).order(-User.added)
+        found_users = User.query(User.email == usr_email).order(-User.added)
 
-        if not users or users.count() < 1:
-            if usr_email.endswith(AppInfo.AllowedUserEmailNamespace):
-                toret = create(usr, User.Level.Client)
+        if (found_users.count() == 0
+           and users.is_current_user_admin()):
+            toret = create(usr, User.Level.Admin)
+            update(toret)
         else:
-            toret = users.iter().next()
-            toret.usr = usr
+            if found_users.count() == 0:
+                if usr_email.endswith(AppInfo.AllowedUserEmailNamespace):
+                    toret = create(usr, User.Level.Client)
+            else:
+                toret = found_users.iter().next()
+                toret.usr = usr
 
     return toret

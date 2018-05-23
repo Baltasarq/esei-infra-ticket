@@ -7,7 +7,6 @@ import webapp2
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from webapp2_extras import jinja2
-import datetime as dt
 
 import model.ticket as tickets
 from model.ticket import Ticket
@@ -106,7 +105,7 @@ class ChkTicket(webapp2.RequestHandler):
                               + " " + ticket.title.encode("ascii", "replace"))
             else:
                 self.redirect("/error?msg=Comment should be at least of "
-                              + str(ChkTicket.MinCommentLength) + " chars.")
+                              + unicode(ChkTicket.MinCommentLength) + " chars.")
         else:
             self.redirect("/")
 

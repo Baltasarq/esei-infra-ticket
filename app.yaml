@@ -69,6 +69,10 @@ handlers:
   script: handlers.tickets.delete.app
   login: required
 
+- url: /tickets/toner_report
+  script: handlers.tickets.toner_report.app
+  login: required
+
 - url: /_ah/mail/.+
   script: handlers.manage_incoming_email.app
   login: admin

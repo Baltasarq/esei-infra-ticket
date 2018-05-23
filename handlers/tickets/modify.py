@@ -4,7 +4,6 @@
 
 
 import webapp2
-import datetime as dt
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from webapp2_extras import jinja2
@@ -81,6 +80,10 @@ class ModifyTicket(webapp2.RequestHandler):
             ticket.priority = Ticket.Priority.value_from_str(self.request.get("priority"))
             ticket.type = Ticket.Type.value_from_str(self.request.get("type"))
 
+            if (not ticket.client_email
+                    and usr_info.is_client()):
+                ticket.client_email = usr_info.email
+
             # Chk
             if len(ticket.title) < 1:
                 self.redirect("/error?msg=Aborted modification: missing title")
@@ -91,9 +94,10 @@ class ModifyTicket(webapp2.RequestHandler):
                 return
 
             # Report
-            tickets.send_email_for(ticket, "modified", "    modified by: " + str(usr_info))
+            tickets.send_email_for(ticket, "modified", "    modified by: " + unicode(usr_info))
 
             # Save
+            ticket.born = True
             tickets.update(ticket)
             self.redirect("/info?url=/manage_tickets&msg=Ticket modified: "
                           + ticket.title.encode("ascii", "replace"))

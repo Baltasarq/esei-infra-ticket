@@ -82,6 +82,12 @@ indexes:
   - name: priority
     direction: desc
 
+- kind: Ticket
+  properties:
+  - name: type
+  - name: added
+    direction: desc
+
 - kind: User
   properties:
   - name: added

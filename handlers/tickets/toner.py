@@ -63,27 +63,30 @@ class AddToner(webapp2.RequestHandler):
                 logs.error("Invalid number of units: " + str_num_units)
 
             if (num_units < 1
-                    or num_units > 10):
+               or num_units > 10):
                 logs.error("Invalid number of units (1 < units < 10): " + str_num_units)
 
             # Create ticket
             ticket = tickets.create(usr_info)
 
+            ticket.born = True
             ticket.progress = Ticket.Progress.Tracked
             ticket.status = Ticket.Status.Open
             ticket.priority = Ticket.Priority.Low
             ticket.type = Ticket.Type.Supplies
 
-            ticket.title = "Supplies: toner"
-            ticket.desc = "Ink cartridge requested for: "\
+            ticket.title = u"Toner: " + printer_maker\
+                           + u" " + printer_model\
+                           + u" " + cartridge_model
+            ticket.desc = u"Ink cartridge requested for: "\
                           + printer_maker + " " + printer_model + '\n'\
-                          + "Cartridge #" + cartridge_model + "\n"\
-                          + str(num_units) + " units"
+                          + u"Cartridge #" + cartridge_model + "\n"\
+                          + unicode(num_units) + u" units"
             ticket.client_email = ""
             ticket.classroom = ""
 
             # Report
-            tickets.send_email_for(ticket, "Ink cartridge request", "    by " + str(usr_info))
+            tickets.send_email_for(ticket, "Ink cartridge request", "    by " + unicode(usr_info))
 
             # Save
             tickets.update(ticket)

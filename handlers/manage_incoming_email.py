@@ -13,7 +13,7 @@ class IncomingEmailHandler(InboundMailHandler):
         today = dt.datetime.today()
         body = [body.body.decode() + "\n" for body in mail_msg.bodies("text/plain")]
 
-        error_msg = str(today) + " ERROR:\n" + body
+        error_msg = unicode(today) + " ERROR:\n" + body
         logging.error(error_msg)
 
 

@@ -21,7 +21,7 @@ class ReportHandler(webapp2.RequestHandler):
             tickets = Ticket.query(Ticket.status == Ticket.Status.Open).order(-Ticket.added)
 
             for ticket in tickets:
-                message_body += str(ticket) + "\n\n---\n\n"
+                message_body += unicode(ticket) + "\n\n---\n\n"
 
             message_body += "\n\n---\n\n" + AppInfo.AppWeb + "\n"
 

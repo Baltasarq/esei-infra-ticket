@@ -71,10 +71,17 @@
         </a>
         <br/>
         <a href="/tickets/toner">
-            <img height="24px" width="24px" title="new ticket"
-                 class="styled-button" src="/res/printer.svg"/>
+            <img height="24px" width="24px" title="new toner ticket"
+                 class="styled-button" src="/res/add_toner.svg"/>
         </a>
         <br/>
+        {% if usr_info.is_admin() %}
+        <a href="/tickets/toner_report">
+            <img height="24px" width="24px" title="toner tickets report"
+                 class="styled-button" src="/res/report_toner.svg"/>
+        </a>
+        <br/>
+        {%  endif %}
     </div>
     <div id="dvTitle">
         <img height="32px" width="32px" title="tickets" src="/res/ticket.svg"/>
