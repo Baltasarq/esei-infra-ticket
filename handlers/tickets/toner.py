@@ -42,6 +42,8 @@ class AddToner(webapp2.RequestHandler):
             printer_maker = self.request.get("printer_maker", "").strip()
             printer_model = self.request.get("printer_model", "").strip()
             str_num_units = self.request.get("number_of_units", "").strip()
+            client = self.request.get("client", "").strip()
+            client_email = self.request.get("client_email", "").strip()
             num_units = 1
 
             # Chk
@@ -78,11 +80,11 @@ class AddToner(webapp2.RequestHandler):
             ticket.title = u"Toner: " + printer_maker\
                            + u" " + printer_model\
                            + u" " + cartridge_model
-            ticket.desc = u"Ink cartridge requested for: "\
+            ticket.desc = u"Client: " + client + u"\nInk cartridge requested for: "\
                           + printer_maker + " " + printer_model + '\n'\
                           + u"Cartridge #" + cartridge_model + "\n"\
                           + unicode(num_units) + u" units"
-            ticket.client_email = ""
+            ticket.client_email = client_email
             ticket.classroom = ""
 
             # Report

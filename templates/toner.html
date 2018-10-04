@@ -22,6 +22,8 @@
         var edPrinterModel = document.getElementById( "edPrinterModel" );
         var edCartridgeModel = document.getElementById( "edCartridgeModel" );
         var edNumberOfUnits = document.getElementById( "edNumberOfUnits" );
+        var edClient = document.getElementById( "edClient" );
+        var edClientEMail = document.getElementById( "edClientEMail" );
 
         hideError();
 
@@ -37,6 +39,16 @@
 
         if ( edCartridgeModel.value.trim().length < 3 ) {
             showError( "The cartridge  model is mandatory." );
+            toret = false;
+        }
+
+        if ( edClient.value.trim().length < 3 ) {
+            showError( "The client's name is mandatory." );
+            toret = false;
+        }
+
+        if ( edClientEMail.value.trim().length < 3 ) {
+            showError( "The client's e.mail  model is mandatory." );
             toret = false;
         }
 
@@ -81,6 +93,14 @@
                 style="border:none;background-color:lightgray"/>
         <br />
         <b><label for="edCartridgeModel">Cartridge model</label></b> <input type="text" name="cartridge_model" id="edCartridgeModel" size="80"
+                value=""
+                style="border:none;background-color:lightgray"/>
+        <br />
+        <b><label for="edClient">Client</label></b> <input type="text" name="client" id="edClient" size="80"
+                value=""
+                style="border:none;background-color:lightgray"/>
+        <br />
+        <b><label for="edClientEmail">Client E.Mail</label></b> <input type="text" name="client_email" id="edClientEmail" size="80"
                 value=""
                 style="border:none;background-color:lightgray"/>
         <br />

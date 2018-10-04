@@ -45,6 +45,12 @@ indexes:
 
 - kind: Ticket
   properties:
+  - name: born
+  - name: added
+    direction: desc
+
+- kind: Ticket
+  properties:
   - name: open
   - name: added
     direction: desc

@@ -3,9 +3,11 @@
 # (c) Baltasar 2018 MIT License <baltasarq@gmail.com>
 
 
+from google.appengine.runtime.apiproxy_errors import OverQuotaError
 from google.appengine.api.mail import EmailMessage
 from google.appengine.ext import ndb
 import datetime as dt
+import logging
 
 from model.enums import Enum
 
@@ -127,12 +129,11 @@ def create(user):
 
 
 def clean_unborn():
-    """Removes asynchronally those tickets that
+    """Removes asynchronously those tickets that
        technically were created but never modified for the first time."""
 
     # Makes me sick, but ndb only understands == True or == False
     unborn_ticket_keys = Ticket.query(Ticket.born == False).fetch(keys_only=True)
-    tickets_to_delete = ndb.get_multi(unborn_ticket_keys)
     ndb.delete_multi_async(unborn_ticket_keys)
 
 
@@ -165,11 +166,21 @@ def send_email(rcpt, subject, body):
     subject = subject
     body = body
 
-    EmailMessage(
-        sender=AppInfo.AppEmail,
-        subject=subject,
-        to=rcpt,
-        body=body).send()
+    logging.debug("Sending mail: '" + subject + "' to: " + rcpt)
+
+    try:
+        EmailMessage(
+            sender=AppInfo.AppEmail,
+            subject=subject,
+            to=rcpt,
+            body=body).send()
+        logging.debug("Email sent: '" + subject + "' to: " + rcpt)
+    except OverQuotaError as e:
+        logging.error("Quota error sending mail: '" + subject + "' to: " + rcpt
+                      + "\n\t" + e.message)
+    except Exception as e:
+        logging.error("Unexpected error sending mail: '" + subject + "' to: " + rcpt
+                      + "\n\t" + e.message)
 
 
 @ndb.transactional

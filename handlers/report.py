@@ -29,7 +29,7 @@ class ReportHandler(webapp2.RequestHandler):
                     sender=AppInfo.AppEmail,
                     subject=AppInfo.Name + " report: " + today.strftime("%Y-%m-%d %H:%M:%S"),
                     to=AppInfo.BroadcastEmail,
-                    body=message_body.decode("ascii", "replace")).send()
+                    body=message_body).send()
 
             self.redirect("/info?url=/manage_tickets&msg=Report sent to: "
                           + AppInfo.BroadcastEmail.decode("ascii", "replace"))

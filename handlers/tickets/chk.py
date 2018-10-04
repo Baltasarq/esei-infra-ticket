@@ -94,15 +94,15 @@ class ChkTicket(webapp2.RequestHandler):
                 ticket.status = Ticket.Status.value_from_str(self.request.get("status"))
                 ticket.comments.append(tickets.Comment(author=usr_info.email, text=new_comment))
 
-                # Report
-                tickets.send_email_chk_for(ticket, "checked", usr_info.email + " says:\n" + new_comment)
-
                 # Save
                 tickets.update(ticket)
                 self.redirect("/info?url=/manage_tickets&msg=Ticket checked: "
                               + ticket.Status.values[ticket.status]
                               + " " + ticket.Progress.values[ticket.progress]
                               + " " + ticket.title.encode("ascii", "replace"))
+
+                # Report
+                tickets.send_email_chk_for(ticket, "checked", usr_info.email + " says:\n" + new_comment)
             else:
                 self.redirect("/error?msg=Comment should be at least of "
                               + unicode(ChkTicket.MinCommentLength) + " chars.")

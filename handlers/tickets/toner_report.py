@@ -10,7 +10,7 @@ class TonerReportManager(webapp2.RequestHandler):
     def add_csv_row(self, ticket):
         """Called when one row is going to be added to the csv document."""
         new_row = '"' + ticket.title + '"'
-        new_row += ',"' + ticket.desc.replace('\n', '  ') + '"'
+        new_row += ',"' + ticket.desc.replace('\n', '  ').replace('\r', ' ') + '"'
         new_row += ',"' + ticket.client_email + '"'
         self.csv_content += new_row + "\n"
 
