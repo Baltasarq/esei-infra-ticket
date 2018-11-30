@@ -94,6 +94,13 @@ class ChkTicket(webapp2.RequestHandler):
                 ticket.status = Ticket.Status.value_from_str(self.request.get("status"))
                 ticket.comments.append(tickets.Comment(author=usr_info.email, text=new_comment))
 
+                # Assure the ticket's progress is Fixed when appropriate
+                if (ticket.status == Ticket.Status.Closed
+                   and (ticket.progress == Ticket.Progress.New
+                        or ticket.progress == Ticket.Progress.Tracked
+                        or ticket.progress == Ticket.Progress.Stalled)):
+                    ticket.progress = Ticket.Progress.Fixed
+
                 # Save
                 tickets.update(ticket)
                 self.redirect("/info?url=/manage_tickets&msg=Ticket checked: "
